@@ -1,5 +1,12 @@
+mod counter;
+
 use leptos::prelude::*;
+use crate::counter::SimpleCounter;
 
 fn main() {
-    leptos::mount::mount_to_body(|| view! { <p>"Hello, world!"</p> })
+    _ = console_log::init_with_level(log::Level::Debug);
+    console_error_panic_hook::set_once();
+    mount_to_body(|| {
+        view! { <SimpleCounter initial_value=0 step=10/> }
+    })
 }
