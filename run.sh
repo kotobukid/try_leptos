@@ -1,3 +1,3 @@
 #!/bin/sh
 
-trunk serve --open
+(cd front && trunk serve --open)
