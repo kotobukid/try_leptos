@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use leptos_style::Style;
+use leptos_meta::Style as MetaStyle;
 
 /// A simple counter component.
 ///
@@ -48,6 +49,9 @@ pub fn SimpleCounter(
                     <span>"Value: " {value} "!"</span>
                 </td>
                 <td style={bordered_style.clone()}>
+                    <MetaStyle>
+                        "button { font-weight: bold; }"
+                    </MetaStyle>
                     <button on:click=move |_| set_value.update(|value| *value += step)>"+1"</button>
                 </td>
             </tbody>
