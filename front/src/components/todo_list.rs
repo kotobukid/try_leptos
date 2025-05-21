@@ -123,9 +123,11 @@ fn TodoRow(store: Store<Todos>, #[prop(into)] todo: Field<Todo>) -> impl IntoVie
             <input
                 type="date"
                 prop:value=move || {
-                    todo.status().scheduled_for_date().map(|n| n.get().to_string())
+                    todo.status()
+                        .scheduled_for_date()
+                        .map(|n| n.get().to_string())
+                        .unwrap_or_default() // Noneの場合は空文字列を返す
                 }
-
                 class:hidden=move || !todo.status().scheduled_for()
                 on:change:target=move |ev| {
                     if let Some(date) = todo.status().scheduled_for_date() {
