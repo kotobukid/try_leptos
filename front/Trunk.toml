@@ -22,5 +22,5 @@ auto_include = true # CSS ファイルを自動的に含める
 #proxy_backend = "http://localhost:3000" # API サーバーを指定 (バックエンド用)
 
 [[proxies]]
-backend = "http://127.0.0.1:3000/" # API サーバーのバックエンド
+backend = "http://127.0.0.1:3000/api/" # API サーバーのバックエンド
 rewrite = "/api/" # "/api" で始まるリクエストをバックエンドにプロキシ    {tail}などは非対応(設定不要、不能？)
