@@ -4,11 +4,33 @@ mod store;
 use crate::components::{ButtonCustom, SimpleCounter, TimerDemo, TodoItemsAmount, TodoList};
 use crate::store::data;
 use leptos::prelude::*;
+use gloo_net::http::Request;
+use leptos::logging::log;
 use reactive_stores::Store;
+use wasm_bindgen_futures::spawn_local;
 
 fn main() {
     _ = console_log::init_with_level(log::Level::Debug);
     console_error_panic_hook::set_once();
+
+    spawn_local(async move {
+        match Request::get("http://127.0.0.1:3000/api/hello").send().await {
+            Ok(response) => {
+                if response.ok() {
+                    if let Ok(text) = response.text().await {
+                        log!("成功! レスポンス: {}", text);
+                    } else {
+                        log!("レスポンスのテキストを取得できませんでした");
+                    }
+                } else {
+                    log!("サーバーでエラー: {}", response.status());
+                }
+            }
+            Err(err) => {
+                log!("リクエストエラー: {:?}", err);
+            }
+        }
+    });
 
     let todo_store = Store::new(data());
 

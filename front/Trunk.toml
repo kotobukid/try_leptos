@@ -16,8 +16,11 @@ ignore = [".DS_Store", "Thumbs.db"] # 無視するファイル
 [css]
 auto_include = true # CSS ファイルを自動的に含める
 
-# サーバーの設定
-[serve]
-open = true # ビルド後にブラウザを自動で開く
-#proxy_backend = "http://127.0.0.1:8080" # API サーバーを指定 (バックエンド用)
-#proxy_ws = true # WebSocket プロキシを有効化
+# サーバーの設定　これは旧記法
+#[serve]
+#open = true # ビルド後にブラウザを自動で開く
+#proxy_backend = "http://localhost:3000" # API サーバーを指定 (バックエンド用)
+
+[[proxies]]
+backend = "http://127.0.0.1:3000/" # API サーバーのバックエンド
+rewrite = "/api/" # "/api" で始まるリクエストをバックエンドにプロキシ    {tail}などは非対応(設定不要、不能？)
