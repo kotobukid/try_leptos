@@ -1,11 +1,12 @@
 mod button_custom;
 mod counter;
 mod timer_label;
+mod todo_list;
 
 use crate::button_custom::ButtonCustom;
 use crate::counter::SimpleCounter;
 use crate::timer_label::TimerDemo;
-// use leptos::dom::*;
+use crate::todo_list::TodoList;
 use leptos::prelude::*;
 
 fn main() {
@@ -18,7 +19,7 @@ fn main() {
 
     mount_to_body(move || {
         view! {
-            <div>
+            <div style="background-color: lightgreen;">
                 <button
                     on:click=move |_| {
                         let mut current = counters.get();
@@ -38,6 +39,7 @@ fn main() {
                 <br />
                 <ButtonCustom num={1000} label=label_text />
                 <TimerDemo />
+                <TodoList />
             </div>
         }
     })
