@@ -1,13 +1,7 @@
-mod button_custom;
-mod counter;
-mod timer_label;
-mod todo_list;
+mod components;
 mod store;
 
-use crate::button_custom::ButtonCustom;
-use crate::counter::SimpleCounter;
-use crate::timer_label::TimerDemo;
-use crate::todo_list::TodoList;
+use crate::components::{ButtonCustom, SimpleCounter, TimerDemo, TodoList};
 use leptos::prelude::*;
 
 fn main() {
