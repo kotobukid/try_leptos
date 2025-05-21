@@ -2,6 +2,7 @@ mod button_custom;
 mod counter;
 mod timer_label;
 mod todo_list;
+mod store;
 
 use crate::button_custom::ButtonCustom;
 use crate::counter::SimpleCounter;

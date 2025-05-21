@@ -1,90 +1,9 @@
-use chrono::{Local, NaiveDate};
+use crate::store::todo_items::{
+    StatusStoreFields, Todo, TodoStoreFields, Todos, TodosStoreFields, User, UserStoreFields, data,
+};
+use chrono::NaiveDate;
 use leptos::{logging::warn, prelude::*};
 use reactive_stores::{Field, Patch, Store};
-use serde::{Deserialize, Serialize};
-use std::sync::atomic::{AtomicUsize, Ordering};
-
-// ID starts higher than 0 because we have a few starting todos by default
-static NEXT_ID: AtomicUsize = AtomicUsize::new(3);
-
-#[derive(Debug, Store, Serialize, Deserialize)]
-struct Todos {
-    user: User,
-    #[store(key: usize = |todo| todo.id)]
-    todos: Vec<Todo>,
-}
-
-#[derive(Debug, Store, Patch, Serialize, Deserialize)]
-struct User {
-    name: String,
-    email: String,
-}
-
-#[derive(Debug, Store, Serialize, Deserialize)]
-struct Todo {
-    id: usize,
-    label: String,
-    status: Status,
-}
-
-#[derive(Debug, Default, Clone, Store, Serialize, Deserialize)]
-enum Status {
-    #[default]
-    Pending,
-    Scheduled,
-    ScheduledFor {
-        date: NaiveDate,
-    },
-    Done,
-}
-
-impl Status {
-    pub fn next_step(&mut self) {
-        *self = match self {
-            Status::Pending => Status::ScheduledFor {
-                date: Local::now().naive_local().into(),
-            },
-            Status::Scheduled | Status::ScheduledFor { .. } => Status::Done,
-            Status::Done => Status::Done,
-        };
-    }
-}
-
-impl Todo {
-    pub fn new(label: impl ToString) -> Self {
-        Self {
-            id: NEXT_ID.fetch_add(1, Ordering::Relaxed),
-            label: label.to_string(),
-            status: Status::Pending,
-        }
-    }
-}
-
-fn data() -> Todos {
-    Todos {
-        user: User {
-            name: "Bob".to_string(),
-            email: "bob@example.com".into(),
-        },
-        todos: vec![
-            Todo {
-                id: 0,
-                label: "Create reactive store".to_string(),
-                status: Status::Pending,
-            },
-            Todo {
-                id: 1,
-                label: "???".to_string(),
-                status: Status::Pending,
-            },
-            Todo {
-                id: 2,
-                label: "Profit".to_string(),
-                status: Status::Pending,
-            },
-        ],
-    }
-}
 
 #[component]
 pub fn TodoList() -> impl IntoView {
@@ -150,10 +69,7 @@ fn UserForm(#[prop(into)] user: Field<User>) -> impl IntoView {
 }
 
 #[component]
-fn TodoRow(
-    store: Store<Todos>,
-    #[prop(into)] todo: Field<Todo>,
-) -> impl IntoView {
+fn TodoRow(store: Store<Todos>, #[prop(into)] todo: Field<Todo>) -> impl IntoView {
     let status = todo.status();
     let title = todo.label();
 
