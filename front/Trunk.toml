@@ -1,0 +1,23 @@
+# Trunk 設定ファイル
+
+# エントリーポイントの index.html を指定
+build = { target = "index.html" }
+
+# 出力ディレクトリの設定
+[output]
+dir = "./dist" # ビルド成果物を出力するディレクトリ
+create_dir = true # ディレクトリを自動生成
+
+# 静的リソースをコピーする設定
+[static]
+ignore = [".DS_Store", "Thumbs.db"] # 無視するファイル
+
+# CSS ビンドリングのオプション
+[css]
+auto_include = true # CSS ファイルを自動的に含める
+
+# サーバーの設定
+[serve]
+open = true # ビルド後にブラウザを自動で開く
+#proxy_backend = "http://127.0.0.1:8080" # API サーバーを指定 (バックエンド用)
+#proxy_ws = true # WebSocket プロキシを有効化
