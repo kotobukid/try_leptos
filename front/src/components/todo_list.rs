@@ -149,6 +149,6 @@ pub fn TodoItemsAmount() -> impl IntoView {
     let store = use_context::<Store<Todos>>().expect("TodoStore should be provided");
 
     view! {
-        <div style="background-color: black; color: white; padding: 10px;">"Total " {store.todos().read().len()} " items"</div>
+        <div style="background-color: black; color: white; padding: 10px;">"Total " {move || store.todos().read().len()} " items"</div>
     }
 }
