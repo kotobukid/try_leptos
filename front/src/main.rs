@@ -14,7 +14,7 @@ fn main() {
     console_error_panic_hook::set_once();
 
     spawn_local(async move {
-        match Request::get("http://127.0.0.1:3000/api/hello").send().await {
+        match Request::get("/api/hello").send().await {
             Ok(response) => {
                 if response.ok() {
                     if let Ok(text) = response.text().await {
