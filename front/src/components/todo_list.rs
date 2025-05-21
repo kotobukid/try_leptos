@@ -1,5 +1,5 @@
 use crate::store::todo_items::{
-    StatusStoreFields, Todo, TodoStoreFields, Todos, TodosStoreFields, User, UserStoreFields, data,
+    StatusStoreFields, Todo, TodoStoreFields, Todos, TodosStoreFields, User, UserStoreFields,
 };
 use chrono::NaiveDate;
 use leptos::{logging::warn, prelude::*};
@@ -7,7 +7,7 @@ use reactive_stores::{Field, Patch, Store};
 
 #[component]
 pub fn TodoList() -> impl IntoView {
-    let store = Store::new(data());
+    let store = use_context::<Store<Todos>>().expect("TodoStore should be provided");
 
     let input_ref = NodeRef::new();
 
@@ -18,7 +18,10 @@ pub fn TodoList() -> impl IntoView {
             <hr/>
             <form on:submit=move |ev| {
                 ev.prevent_default();
-                store.todos().write().push(Todo::new(input_ref.get().unwrap().value()));
+                if let Some(input) = input_ref.get() {
+                    let new_todo = Todo::new(input.value());
+                    store.todos().write().push(new_todo);
+                }
             }>
                 <label>"Add a Todo" <input type="text" node_ref=input_ref/></label>
                 <input type="submit"/>
@@ -90,7 +93,7 @@ fn TodoRow(store: Store<Todos>, #[prop(into)] todo: Field<Todo>) -> impl IntoVie
                 {move || title.get()}
             </p>
             <input
-                class:hidden=move || !(editing.get())
+                class:hidden=move || !editing.get()
                 type="text"
                 prop:value=move || title.get()
                 on:change=move |ev| {
@@ -138,5 +141,14 @@ fn TodoRow(store: Store<Todos>, #[prop(into)] todo: Field<Todo>) -> impl IntoVie
             />
 
         </li>
+    }
+}
+
+#[component]
+pub fn TodoItemsAmount() -> impl IntoView {
+    let store = use_context::<Store<Todos>>().expect("TodoStore should be provided");
+
+    view! {
+        <div style="background-color: black; color: white; padding: 10px;">"Total " {store.todos().read().len()} " items"</div>
     }
 }

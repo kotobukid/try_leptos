@@ -1,5 +1,5 @@
 mod todo_list;
-pub use todo_list::TodoList;
+pub use todo_list::{TodoList, TodoItemsAmount};
 
 mod button_custom;
 pub use button_custom::*;
