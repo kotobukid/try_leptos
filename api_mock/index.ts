@@ -2,7 +2,7 @@ import express, {type Request, type Response, type NextFunction} from "express";
 import cors from "cors";
 
 const app = express();
-const port = 3000;
+const port = 8081;
 
 app.use(cors({
   origin: 'http://localhost:8080', // フロントエンドが実行されているURL
