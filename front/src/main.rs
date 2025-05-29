@@ -3,9 +3,9 @@ mod store;
 
 use crate::components::{ButtonCustom, SimpleCounter, TimerDemo, TodoItemsAmount, TodoList};
 use crate::store::data;
-use leptos::prelude::*;
 use gloo_net::http::Request;
 use leptos::logging::log;
+use leptos::prelude::*;
 use reactive_stores::Store;
 use wasm_bindgen_futures::spawn_local;
 
@@ -13,12 +13,15 @@ fn main() {
     _ = console_log::init_with_level(log::Level::Debug);
     console_error_panic_hook::set_once();
 
+    let (response_text, set_response_text) = signal(String::new());
+
     spawn_local(async move {
         match Request::get("/api/hello").send().await {
             Ok(response) => {
                 if response.ok() {
                     if let Ok(text) = response.text().await {
-                        log!("成功! レスポンス: {}", text);
+                        log!("成功! レスポンス: {}", &text);
+                        set_response_text.set(text);
                     } else {
                         log!("レスポンスのテキストを取得できませんでした");
                     }
@@ -44,6 +47,7 @@ fn main() {
 
         view! {
             <div style="background-color: lightgreen;">
+                <div>"APIレスポンス: " {response_text}</div>
                 <button
                     on:click=move |_| {
                         let mut current = counters.get();
