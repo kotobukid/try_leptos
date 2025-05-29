@@ -17,7 +17,7 @@ args = ["serve"]
 description = "フロントエンドのビルド"
 cwd = "front"
 command = "trunk"
-args = ["build", "--release"]
+args = ["build", "--release", "--minify"]
 
 [tasks.build-back]
 description = "フロントエンドビルド済み前提でバックエンドをビルド"
