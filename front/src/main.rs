@@ -10,6 +10,8 @@ use reactive_stores::Store;
 use wasm_bindgen_futures::spawn_local;
 use gloo_timers::future::sleep;
 use std::time::Duration;
+use leptos::html::li;
+use datapack::export_features;
 
 fn main() {
     _ = console_log::init_with_level(log::Level::Debug);
@@ -44,6 +46,30 @@ fn main() {
     let (counters, set_counters) = signal(vec![0, 100]);
     let (label_text, _) = signal(String::from("Custom Button"));
 
+    let cards = export_features();
+    log!("Cards {:?}", cards);
+
+    // Convert the HashMap to a list of li elements
+    let card_list = move || {
+        let mut list = Vec::new();
+        for (feature_name, cards_vec) in cards.iter() {
+            let feature_item = view! {
+                <li>
+                    {feature_name.clone()}
+                    <ul>
+                        {cards_vec.iter().map(|card| {
+                            view! {
+                                <li>"ID: " {card.id} ", Name: " {card.name.clone()}</li>
+                            }
+                        }).collect_view()}
+                    </ul>
+                </li>
+            };
+            list.push(feature_item);
+        }
+        list.into_iter().collect_view()
+    };
+
     mount_to_body(move || {
         // グローバルコンテキストとしてStoreを提供すると、他のコンポーネントでも使用可能に
         provide_context(todo_store);
@@ -72,6 +98,10 @@ fn main() {
                 <TimerDemo />
                 <TodoItemsAmount />
                 <TodoList />
+                <hr />
+                <ul>
+                    {card_list()}
+                </ul>
             </div>
         }
     })
