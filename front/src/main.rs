@@ -8,12 +8,14 @@ use leptos::logging::log;
 use leptos::prelude::*;
 use reactive_stores::Store;
 use wasm_bindgen_futures::spawn_local;
+use gloo_timers::future::sleep;
+use std::time::Duration;
 
 fn main() {
     _ = console_log::init_with_level(log::Level::Debug);
     console_error_panic_hook::set_once();
 
-    let (response_text, set_response_text) = signal(String::new());
+    let (response_text, set_response_text) = signal(String::from("initial string"));
 
     spawn_local(async move {
         match Request::get("/api/hello").send().await {
@@ -21,6 +23,7 @@ fn main() {
                 if response.ok() {
                     if let Ok(text) = response.text().await {
                         log!("成功! レスポンス: {}", &text);
+                        sleep(Duration::from_secs(2)).await;
                         set_response_text.set(text);
                     } else {
                         log!("レスポンスのテキストを取得できませんでした");
