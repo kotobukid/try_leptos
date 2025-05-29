@@ -1,0 +1,30 @@
+[config]
+default_to_workspace = false
+
+[tasks.run-back]
+description = "バックエンドの開発サーバーを起動"
+script = [
+    "cargo run -p webserver",
+]
+
+[tasks.run-front]
+description = "フロントエンドの開発サーバーを起動"
+cwd = "front"
+command = "trunk"
+args = ["serve"]
+
+[tasks.build-front]
+description = "フロントエンドのビルド"
+cwd = "front"
+command = "trunk"
+args = ["build", "--release"]
+
+[tasks.build-back]
+description = "フロントエンドビルド済み前提でバックエンドをビルド"
+script = [
+    "cargo build -p webserver --release",
+]
+
+[tasks.full-release]
+description = "フロントエンドとバックエンドの完全リリースビルド"
+dependencies = ["build-front", "build-back"]
