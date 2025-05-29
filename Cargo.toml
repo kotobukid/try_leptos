@@ -1,0 +1,3 @@
+[workspace]
+members = ["front", "webserver"]
+resolver = "2"
