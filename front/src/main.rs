@@ -3,7 +3,6 @@ mod jslike;
 mod store;
 
 use crate::components::{ButtonCustom, SimpleCounter, TimerDemo, TodoItemsAmount, TodoList};
-use crate::jslike::set_timeout_inner;
 use crate::store::data;
 use datapack::export_features;
 use gloo_net::http::Request;
@@ -28,7 +27,7 @@ fn main() {
                         if response.ok() {
                             if let Ok(text) = response.text().await {
                                 log!("成功! レスポンス: {}", &text);
-                                let set_response_text = set_response_text.clone();
+                                
                                 let text = text.clone(); // Clone text to ensure 'static lifetime
                                 set_timeout!(
                                     {

@@ -10,6 +10,7 @@ pub struct Timer {
 
 impl Timer {
     /// タイマーを新規作成
+    #[allow(dead_code)]
     pub fn new<F>(f: F, timeout_ms: u32) -> Self
     where
         F: FnOnce() + 'static,
@@ -47,6 +48,7 @@ where
 /// JavaScriptのsetTimeoutのような非同期タイマー関数（キャンセル可能な場合）
 /// let timer_id = set_timeout_cancellable(f, timeout_ms);
 /// timer_id.cancel(); // タイマーをキャンセルする
+#[allow(dead_code)]
 pub fn set_timeout_cancellable_inner<F>(f: F, timeout_ms: u32) -> Timeout
 where
     F: FnOnce() + 'static,
