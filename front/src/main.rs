@@ -1,17 +1,15 @@
 mod components;
+mod jslike;
 mod store;
 
 use crate::components::{ButtonCustom, SimpleCounter, TimerDemo, TodoItemsAmount, TodoList};
 use crate::store::data;
+use datapack::export_features;
 use gloo_net::http::Request;
 use leptos::logging::log;
 use leptos::prelude::*;
 use reactive_stores::Store;
 use wasm_bindgen_futures::spawn_local;
-use gloo_timers::future::sleep;
-use std::time::Duration;
-use leptos::html::li;
-use datapack::export_features;
 
 fn main() {
     _ = console_log::init_with_level(log::Level::Debug);
@@ -19,26 +17,36 @@ fn main() {
 
     let (response_text, set_response_text) = signal(String::from("initial string"));
 
-    spawn_local(async move {
-        match Request::get("/api/hello").send().await {
-            Ok(response) => {
-                if response.ok() {
-                    if let Ok(text) = response.text().await {
-                        log!("成功! レスポンス: {}", &text);
-                        sleep(Duration::from_secs(2)).await;
-                        set_response_text.set(text);
+    jslike::set_timeout(move || {
+        let text = "start ajax calling.".to_string();
+        set_response_text.set(text);
+        spawn_local(async move {
+            match Request::get("/api/hello").send().await {
+                Ok(response) => {
+                    if response.ok() {
+                        if let Ok(text) = response.text().await {
+                            log!("成功! レスポンス: {}", &text);
+                            let set_response_text = set_response_text.clone();
+                            let text = text.clone(); // Clone text to ensure 'static lifetime
+                            jslike::set_timeout(
+                                move || {
+                                    set_response_text.set(text);
+                                },
+                                2000,
+                            );
+                        } else {
+                            log!("レスポンスのテキストを取得できませんでした");
+                        }
                     } else {
-                        log!("レスポンスのテキストを取得できませんでした");
+                        log!("サーバーでエラー: {}", response.status());
                     }
-                } else {
-                    log!("サーバーでエラー: {}", response.status());
+                }
+                Err(err) => {
+                    log!("リクエストエラー: {:?}", err);
                 }
             }
-            Err(err) => {
-                log!("リクエストエラー: {:?}", err);
-            }
-        }
-    });
+        });
+    }, 2000);
 
     let todo_store = Store::new(data());
 
