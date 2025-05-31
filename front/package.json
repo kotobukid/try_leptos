@@ -1,0 +1,12 @@
+{
+  "name": "try_leptos_front",
+  "version": "1.0.0",
+  "description": "Frontend for try_leptos project",
+  "scripts": {
+    "build": "tailwindcss -i ./tailwind.css -o ./dist/tailwind.css",
+    "watch": "tailwindcss -i ./tailwind.css -o ./dist/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.3"
+  }
+}

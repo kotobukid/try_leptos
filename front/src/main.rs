@@ -27,7 +27,7 @@ fn main() {
                         if response.ok() {
                             if let Ok(text) = response.text().await {
                                 log!("成功! レスポンス: {}", &text);
-                                
+
                                 let text = text.clone(); // Clone text to ensure 'static lifetime
                                 set_timeout!(
                                     {
@@ -86,33 +86,45 @@ fn main() {
         provide_context(todo_store);
 
         view! {
-            <div style="background-color: lightgreen;">
-                <div>"APIレスポンス: " {response_text}</div>
+            <div class="container mx-auto p-6 bg-green-100 rounded-lg shadow-md">
+                <div class="mb-4 text-lg font-semibold">"APIレスポンス: " <span class="text-blue-600">{response_text}</span></div>
                 <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
                     on:click=move |_| {
                         let mut current = counters.get();
                         current.push(current.len() as i32 * 100);
                         set_counters.set(current);
                     }
                 >"Add Counter"</button>
-                <br />
-                <For each=move || counters.get()
-                    key=|count| *count
-                    children=move |initial_value| {
-                        view! {
-                            <SimpleCounter initial_value=initial_value step=10/>
+                <div class="my-4">
+                    <For each=move || counters.get()
+                        key=|count| *count
+                        children=move |initial_value| {
+                            view! {
+                                <SimpleCounter initial_value=initial_value step=10/>
+                            }
                         }
-                    }
-                />
-                <br />
-                <ButtonCustom num={1000} label=label_text />
-                <TimerDemo />
-                <TodoItemsAmount />
-                <TodoList />
-                <hr />
-                <ul>
-                    {card_list()}
-                </ul>
+                    />
+                </div>
+                <div class="my-4">
+                    <ButtonCustom num={1000} label=label_text />
+                </div>
+                <div class="my-4">
+                    <TimerDemo />
+                </div>
+                <div class="my-4">
+                    <TodoItemsAmount />
+                </div>
+                <div class="my-4">
+                    <TodoList />
+                </div>
+                <hr class="my-6 border-gray-300" />
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h2 class="text-xl font-bold mb-2">Card List</h2>
+                    <ul class="list-disc pl-6">
+                        {card_list()}
+                    </ul>
+                </div>
             </div>
         }
     })

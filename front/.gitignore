@@ -1,4 +1,7 @@
 /target
 /.idea
 Cargo.lock
-dist
+/dist
+
+/node_modules
+package-lock.json

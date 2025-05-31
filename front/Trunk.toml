@@ -16,6 +16,12 @@ ignore = [".DS_Store", "Thumbs.db"] # 無視するファイル
 [css]
 auto_include = true # CSS ファイルを自動的に含める
 
+# Tailwind CSS の設定
+[[hooks]]
+stage = "build"
+command = "sh"
+command_arguments = ["./build-tailwind.sh"]
+
 # サーバーの設定　これは旧記法
 #[serve]
 #open = true # ビルド後にブラウザを自動で開く

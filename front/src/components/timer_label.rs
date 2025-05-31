@@ -19,16 +19,20 @@ pub fn TimerDemo() -> impl IntoView {
     });
 
     view! {
-        <div style="display: block; width: 200px; background-color: pink; padding: 5px; border: 1px solid grey;">
-            <div>"Count A (fixed interval of 1000 ms)"</div>
-            <div>{count_a}</div>
-            <div>"Count B (dynamic interval, currently " {interval} " ms)"</div>
-            <div>{count_b}</div>
-            <input prop:value=interval on:input:target=move |ev| {
-                if let Ok(value) = ev.target().value().parse::<u64>() {
-                    interval.set(value);
+        <div class="block w-64 bg-pink-200 p-4 border border-gray-400 rounded-lg shadow-md">
+            <div class="font-semibold mb-2">"Count A (fixed interval of 1000 ms)"</div>
+            <div class="text-2xl font-bold text-blue-600 mb-3">{count_a}</div>
+            <div class="font-semibold mb-2">"Count B (dynamic interval, currently " {interval} " ms)"</div>
+            <div class="text-2xl font-bold text-purple-600 mb-3">{count_b}</div>
+            <input 
+                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-500"
+                prop:value=interval 
+                on:input:target=move |ev| {
+                    if let Ok(value) = ev.target().value().parse::<u64>() {
+                        interval.set(value);
+                    }
                 }
-            }/>
+            />
         </div>
     }
 }
