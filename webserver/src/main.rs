@@ -1,6 +1,7 @@
 use axum::Router;
 use axum::routing::get;
 use std::path::PathBuf;
+use std::env;
 use tower_http::services::ServeDir;
 
 async fn hello_handler() -> &'static str {
@@ -9,10 +10,14 @@ async fn hello_handler() -> &'static str {
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
-    let web_port = 8081;
+    // 環境変数からポート番号を取得（デフォルト: 8081）
+    let web_port = env::var("API_PORT").unwrap_or_else(|_| "8081".to_string()).parse::<u16>()
+        .expect("API_PORT must be a valid port number");
 
-    // Leptosのビルド成果物のパス
-    let leptos_dist_path = PathBuf::from("front/dist");
+    // 環境変数から静的ファイルのパスを取得（デフォルト: "front/dist"）
+    let leptos_dist_path = PathBuf::from(
+        env::var("STATIC_FILES_PATH").unwrap_or_else(|_| "front/dist".to_string())
+    );
 
     // APIルーター
     let api_routes = Router::new().route("/hello", get(hello_handler));
@@ -29,7 +34,8 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Failed to bind port");
     println!("Server is running on http://{}", web_addr);
-    println!("Serving Leptos application from front/dist directory");
+    println!("Serving Leptos application from {} directory", 
+             env::var("STATIC_FILES_PATH").unwrap_or_else(|_| "front/dist".to_string()));
     axum::serve(listener, app).await?;
 
     Ok(())

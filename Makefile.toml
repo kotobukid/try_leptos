@@ -4,25 +4,46 @@ default_to_workspace = false
 [tasks.run-back]
 description = "バックエンドの開発サーバーを起動"
 script = [
-    "cargo run -p webserver",
+    '''
+    export API_PORT=${API_PORT:-8081}
+    export STATIC_FILES_PATH=${STATIC_FILES_PATH:-"front/dist"}
+    echo "Starting backend server on port $API_PORT"
+    cargo run -p webserver
+    '''
 ]
 
 [tasks.run-front]
 description = "フロントエンドの開発サーバーを起動"
 cwd = "front"
-command = "trunk"
-args = ["serve"]
+script = [
+    '''
+    # 環境変数からプロキシURLを取得（デフォルト: http://127.0.0.1:8081/api/）
+    PROXY_URL=${PROXY_BACKEND_URL:-http://127.0.0.1:8081/api/}
+    echo "Starting frontend with API proxy to $PROXY_URL"
+    trunk serve --proxy-rewrite=/api/ --proxy-backend=$PROXY_URL
+    '''
+]
 
 [tasks.build-front]
 description = "フロントエンドのビルド"
 cwd = "front"
-command = "trunk"
-args = ["build", "--release", "--minify"]
+script = [
+    '''
+    # ビルド時にはプロキシ設定は不要
+    echo "Building frontend"
+    trunk build --release --minify
+    '''
+]
 
 [tasks.build-back]
 description = "フロントエンドビルド済み前提でバックエンドをビルド"
 script = [
-    "cargo build -p webserver --release",
+    '''
+    export API_PORT=${API_PORT:-8081}
+    export STATIC_FILES_PATH=${STATIC_FILES_PATH:-"front/dist"}
+    echo "Building backend server for port $API_PORT"
+    cargo build -p webserver --release
+    '''
 ]
 
 [tasks.full-release]

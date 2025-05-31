@@ -21,6 +21,5 @@ auto_include = true # CSS ファイルを自動的に含める
 #open = true # ビルド後にブラウザを自動で開く
 #proxy_backend = "http://localhost:3000" # API サーバーを指定 (バックエンド用)
 
-[[proxies]]
-backend = "http://127.0.0.1:8081/api/" # API サーバーのバックエンド
-rewrite = "/api/" # "/api" で始まるリクエストをバックエンドにプロキシ    {tail}などは非対応(設定不要、不能？)
+# プロキシ設定はコマンドラインで指定するため、ここでは設定しない
+# 例: trunk serve --proxy api:http://127.0.0.1:8081/api/
