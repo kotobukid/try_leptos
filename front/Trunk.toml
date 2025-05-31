@@ -21,6 +21,14 @@ auto_include = true # CSS ファイルを自動的に含める
 stage = "build"
 command = "sh"
 command_arguments = ["./build-tailwind.sh"]
+# Pass environment variables to the build hook
+[hooks.env]
+# Pass the build profile (debug or release) to the script
+TRUNK_PROFILE = { value = "${TRUNK_PROFILE}", default = "debug" }
+# Pass the output directory to the script
+TRUNK_DIST_DIR = { value = "${TRUNK_DIST_DIR}", default = "./dist" }
+# Pass the command line arguments to the script
+TRUNK_ARGS = { value = "${TRUNK_ARGS}", default = "" }
 
 # サーバーの設定　これは旧記法
 #[serve]

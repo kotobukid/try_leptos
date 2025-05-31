@@ -7,6 +7,11 @@
     "watch": "tailwindcss -i ./tailwind.css -o ./dist/tailwind.css --watch"
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "caniuse-lite": "^1.0.30001720"
   }
 }

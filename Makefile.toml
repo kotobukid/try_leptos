@@ -20,6 +20,9 @@ script = [
     # 環境変数からプロキシURLを取得（デフォルト: http://127.0.0.1:8081/api/）
     PROXY_URL=${PROXY_BACKEND_URL:-http://127.0.0.1:8081/api/}
     echo "Starting frontend with API proxy to $PROXY_URL"
+    # Set environment variables for the build process
+    export TRUNK_PROFILE=debug
+    export TRUNK_DIST_DIR=./dist
     trunk serve --proxy-rewrite=/api/ --proxy-backend=$PROXY_URL
     '''
 ]
@@ -30,8 +33,33 @@ cwd = "front"
 script = [
     '''
     # ビルド時にはプロキシ設定は不要
-    echo "Building frontend"
+    echo "Building frontend with optimized TailwindCSS (purged and minified)"
+    # Set environment variables for the build process
+    export TRUNK_PROFILE=release
+    export TRUNK_DIST_DIR=./dist
+    # Ensure NODE_ENV is set to production for the entire build process
+    export NODE_ENV=production
     trunk build --release --minify
+    '''
+]
+
+[tasks.build-front2]
+description = "フロントエンドのビルド"
+cwd = "front"
+env = { TRUNK_PROFILE = "release", NODE_ENV = "production" }
+script = [
+    '''
+    echo "Building frontend with optimized TailwindCSS (purged and minified)"
+
+    # 必要なディレクトリを作成
+    mkdir -p dist
+
+    # まずTailwindのビルドを実行
+    NODE_ENV=production npx tailwindcss -i ./tailwind.css -o ./dist/tailwind.css --minify
+
+    # その後でTrunkビルドを実行
+    export TRUNK_PROFILE=release
+    trunk build --release
     '''
 ]
 
